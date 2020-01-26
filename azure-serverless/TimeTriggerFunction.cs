@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 /// 
 /// Develop Azure Function : https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-class-library
 ///
+/// Azure Function Best-Practice : https://docs.microsoft.com/en-us/azure/azure-functions/functions-best-practices
+//
 /// CRON Expression : https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=csharp#ncrontab-expressions
 ///
 namespace Azure.Serverless
@@ -32,7 +34,8 @@ namespace Azure.Serverless
                 // send log message
                 var logService = (LogService)serviceProvider.GetService(typeof(LogService));
 
-                // Sync or Async ??????
+                // Sync or Async
+                // https://docs.microsoft.com/en-us/azure/azure-functions/functions-best-practices#scalability-best-practices
                 logService.SendLogMessage();
             }
             catch (Exception e)
