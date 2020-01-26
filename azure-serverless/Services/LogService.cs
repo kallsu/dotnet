@@ -9,7 +9,17 @@ namespace azure_serverless.Services
 
         }
 
-        public void SendLogMessage() 
+        private void SendLogMessage() 
+        {
+            
+        }
+
+        public void SendLogErrorMessage() 
+        {
+            
+        }
+
+        public void SendLogInfoMessage() 
         {
             
         }

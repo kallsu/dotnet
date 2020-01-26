@@ -43,6 +43,7 @@ namespace Azure.Serverless
                 logger.LogError(e, e.Message);
 
                 // send a log here
+                logService.SendLogMessage();
             }
 
             // Bye Bye !!!
