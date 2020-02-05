@@ -16,45 +16,42 @@ namespace Azure.Serverless {
     public static class TimeTriggerFunction {
 
         [FunctionName ("TimeTriggerFunction")]
-        [
-            return :Table ("LogStorageTable", Connection = "StorageConnectionAppSetting")
-        ]
-        public static LogRecord Run ([TimerTrigger ("0 33 3 * * *")] TimerInfo myTimer,
+        public static void Run (
+            [TimerTrigger ("0 33 3 * * *")] TimerInfo myTimer, 
+            [Queue ("101functionsqueue", Connection = "AzureWebJobsStorage")] ICollector<LogRecord> queueCollector,
             ILogger logger,
             ExecutionContext context) {
 
             // Timing is in UTC
             logger.LogInformation ($"C# Timer trigger function executed at: {DateTime.Now}");
 
-            LogRecord logRecord = null;
-
             try {
                 // Initialize the Service Provider
                 var serviceProvider = AzureFunctionServiceProvider.Create (context, logger);
 
-                // Do something here ...
-
-                // Sync or Async
+                // Do something here ... Sync or Async ?
                 // https://docs.microsoft.com/en-us/azure/azure-functions/functions-best-practices#scalability-best-practices
 
                 // record the success here
-                logRecord = new LogRecord {
-                    PartitionKey = "FUNCT_TIMER_SUCCESS",
-                    RowKey = Guid.NewGuid ().ToString (),
-                    Text = "Ciao Mamma, here is all ok !"
-                };
+                queueCollector.Add (
+                    new LogRecord {
+                        LogLevel = (int) LogLevelEnum.USEFUL_LOG,
+                            Text = "OK. Function execution ends."
+                    });
 
             } catch (Exception e) {
                 logger.LogError (e, e.Message);
 
                 // ops ... there is an error
-                logRecord = new LogRecord { PartitionKey = "FUNCT_TIMER_ERROR", RowKey = Guid.NewGuid ().ToString (), Text = e.Message };
+                queueCollector.Add (
+                    new LogRecord {
+                        LogLevel = (int) LogLevelEnum.ERROR,
+                            Text = e.Message
+                    });
             }
 
             // Bye Bye !!!
             logger.LogInformation ("That's all folks!");
-
-            return logRecord;
         }
     }
 }
