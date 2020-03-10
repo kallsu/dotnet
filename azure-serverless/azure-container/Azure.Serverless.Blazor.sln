@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Serverless.BlazorServer", "Azure.Serverless.BlazorServer\Azure.Serverless.BlazorServer.csproj", "{5A4A7243-1A1A-4381-8BC4-9ED6E485055A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Serverless.BlazorWebAssembly", "Azure.Serverless.BlazorWebAssembly\Azure.Serverless.BlazorWebAssembly.csproj", "{287E1CC9-E330-4621-9879-4DE47D91874C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.Serverless.Web", "Azure.Serverless.Web\Azure.Serverless.Web.csproj", "{59A90ABB-7567-48AC-B7AB-CE01F5781AFD}"
@@ -20,10 +18,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5A4A7243-1A1A-4381-8BC4-9ED6E485055A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A4A7243-1A1A-4381-8BC4-9ED6E485055A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A4A7243-1A1A-4381-8BC4-9ED6E485055A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A4A7243-1A1A-4381-8BC4-9ED6E485055A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{287E1CC9-E330-4621-9879-4DE47D91874C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{287E1CC9-E330-4621-9879-4DE47D91874C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{287E1CC9-E330-4621-9879-4DE47D91874C}.Release|Any CPU.ActiveCfg = Release|Any CPU

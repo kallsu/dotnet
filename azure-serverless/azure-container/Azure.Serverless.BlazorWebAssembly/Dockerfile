@@ -4,8 +4,7 @@
 ARG Environment=Docker
 
 # System set-up
-RUN mkdir -p /home/azure-serverless/blazor && \
- mkdir -p /var/www/blazor
+RUN mkdir -p /home/azure-serverless/blazor
 
 # Compile
 WORKDIR /home/azure-serverless/blazor
@@ -13,11 +12,6 @@ WORKDIR /home/azure-serverless/blazor
 COPY . .
 
 RUN dotnet publish Azure.Serverless.BlazorWebAssembly.csproj -c Release -f netstandard2.1 -r linux-x64 --self-contained
-
-# Preparation
-WORKDIR /var/www/blazor
-
-RUN cp -rv /home/azure-serverless/blazor/bin/Release/netstandard2.1/linux-x64/* .
 
 # Environment variables
 ENV ASPNETCORE_ENVIRONMENT=$Environment
@@ -28,4 +22,4 @@ EXPOSE 5002
 # cleaning
 RUN rm -rf /home/azure-serverless/blazor
 
-CMD ["dotnet", "Azure.Serverless.BlazorWebAssembly.dll"]
+CMD ["dotnet", "run"]
