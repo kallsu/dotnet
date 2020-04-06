@@ -1,0 +1,48 @@
+version: "3.7"
+
+networks: 
+  backend: 
+    driver: bridge
+
+services: 
+  web-server:
+    container_name: web-server
+    build:
+      context: ./Azure.Serverless.Web
+      dockerfile: Dockerfile
+      args:
+        Environment: Docker
+    networks: 
+      - backend
+    ports:
+      - "5001:5001"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 768M
+
+  blazor:
+    container_name: blazor
+    build:
+      context: ./Azure.Serverless.Azure.Serverless.BlazorWebAssembly
+      dockerfile: Dockerfile
+      args:
+        Environment: Docker
+    networks: 
+      - backend
+    ports:
+      - "5002:5002"
+    command: >
+      bash -c "sleep 20 && dotnet run"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 768M

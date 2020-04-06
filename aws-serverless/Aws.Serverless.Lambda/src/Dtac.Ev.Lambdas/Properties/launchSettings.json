@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "Dtac.Ev.Lambdas": {
+      "commandName": "Project",
+      "applicationUrl": "http://[::1]:5000/",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "MicBaseUrl": "https://195cms8yb6.execute-api.eu-west-1.amazonaws.com/prod/",
+        "MicUserName": "sevenpeakssoftware",
+        "MicThingFindUrl": "things/find",
+        "MicApiKey": "uvQQ3iUf4EaUWsx3sNBlL6PjIM61wwuh8KUmR3LR",
+        "MicLoginUrl": "auth/login",
+        "MicPassword": "FyPYyFhG237jgVR",
+        "AwsLambdaFunctionName": "Lambda",
+        "EvPostStatsUrl": "https://dtac-ev-dev-api-load-balancer-984299907.ap-southeast-1.elb.amazonaws.com/api/Stats",
+        "EvApiKey": "c2VjcmV0X2tleV9sYW1iZGFfcG9zdF9ldl9zdGF0cw=="
+      }
+    }
+  }
+}
