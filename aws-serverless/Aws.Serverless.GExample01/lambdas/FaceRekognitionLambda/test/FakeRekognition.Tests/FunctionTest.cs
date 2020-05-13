@@ -1,27 +1,38 @@
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Xunit;
+using System.IO;
+using System.Text;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.S3Events;
 using Amazon.Lambda.TestUtilities;
-
-using FakeRekognition;
+using FaceRekognition;
+using FaceRekognition.Core;
+using Xunit;
 
 namespace FakeRekognition.Tests
 {
     public class FunctionTest
     {
-        [Fact]
-        public void TestToUpperFunction()
+        private MemoryStream LoadJsonTestFile(string filename)
         {
+            var json = File.ReadAllText(filename);
+            return new MemoryStream(Encoding.UTF8.GetBytes(json));
+        }
 
-            // Invoke the lambda function and confirm the string was upper cased.
-            var context = new TestLambdaContext();
-            var upperCase = Function.FunctionHandler("hello world", context);
+        [Theory]
+        [InlineData(typeof(Amazon.Lambda.Serialization.SystemTextJson.LambdaJsonSerializer))]
+        [InlineData(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+        public void S3EventTest(Type serializerType)
+        {
+            var serializer = Activator.CreateInstance(serializerType) as ILambdaSerializer;
+            using (var fileStream = LoadJsonTestFile("s3-event.json"))
+            {
+                var s3Event = serializer.Deserialize<S3Event>(fileStream);
 
-            Assert.Equal("HELLO WORLD", upperCase);
+                var result = Function.FunctionHandler(s3Event, new TestLambdaContext());
+
+                Assert.Equal(Messages.FUNCTION_SUCCESS, result);
+            }
         }
     }
 }

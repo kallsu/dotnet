@@ -4,7 +4,12 @@ using Amazon.Lambda.Serialization.SystemTextJson;
 using FaceRekognition.Core;
 using FaceRekognition.Handlers;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Amazon.Lambda.S3Events;
+
+// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
 namespace FaceRekognition
 {
@@ -16,7 +21,7 @@ namespace FaceRekognition
         /// <param name="args"></param>
         private static async Task Main(string[] args)
         {
-            Func<string, ILambdaContext, string> func = FunctionHandler;
+            Func<S3Event, ILambdaContext, string> func = FunctionHandler;
             using(var handlerWrapper = HandlerWrapper.GetHandlerWrapper(func, new LambdaJsonSerializer()))
             using(var bootstrap = new LambdaBootstrap(handlerWrapper))
             {
@@ -25,33 +30,34 @@ namespace FaceRekognition
         }
 
         /// <summary>
-        /// A simple function that takes a string and does a ToUpper
-        ///
-        /// To use this handler to respond to an AWS event, reference the appropriate package from 
-        /// https://github.com/aws/aws-lambda-dotnet#events
-        /// and change the string input parameter to the desired event type.
+        /// Detect any faces.
         /// </summary>
         /// <param name="input"></param>
         /// <param name="context"></param>
-        /// <returns></returns>
-        public static string FunctionHandler(string input, ILambdaContext context)
+        public static string FunctionHandler(S3Event input, ILambdaContext context)
         {
             try
             {
                 var serviceProvider = ServiceProvider.Init(context);
 
-                var fileHandler = serviceProvider.GetService<ImageHandler>();
+                var imageHandler = (ImageHandler) serviceProvider.GetService(typeof(ImageHandler));
+
+                var bucketName = input.Records[0].S3.Bucket.Name;
+                var fileName = input.Records[0].S3.Object.Key.Split("/").Last();
                 
-                fileHandler.Process(s3Event)
+                var isOk = imageHandler.ProcessAsync(bucketName, fileName)
                            .GetAwaiter()
                            .GetResult();
+
+                return isOk
+                    ? Messages.FUNCTION_SUCCESS
+                    : Messages.NO_FACE;
             }
             catch (Exception e)
             {
                 return string.Format(Messages.FUNCTION_FAILED,
                     e.Message);
             }
-            return Messages.FUNCTION_SUCCESS;
         }
     }
 }
