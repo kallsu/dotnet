@@ -29,7 +29,6 @@ namespace Azure.Web.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddLogging();
 
             services.AddDbContext<MyDbContext>(options => options.UseNpgsql(
@@ -95,12 +94,15 @@ namespace Azure.Web.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MyDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // apply migrations
+            dbContext.Database.Migrate();
 
             app.UseHttpsRedirection();
 
@@ -116,7 +118,7 @@ namespace Azure.Web.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
         }
     }
