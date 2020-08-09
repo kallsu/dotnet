@@ -21,6 +21,6 @@ namespace Azure.Serverless.Api.Entities
         public string Name { get; set; }
 
         [ForeignKey("DistrictId")]
-        public List<DetenctionPoint> Points { get; set; }
+        public List<DetectionPoint> Points { get; set; }
     }
 }

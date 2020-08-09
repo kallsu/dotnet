@@ -1,9 +1,5 @@
-using System;
-using System.ComponentModel;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,9 +8,10 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Converters;
 using Microsoft.EntityFrameworkCore;
 using Azure.Serverless.Api.Datalayer.Context;
-using Microsoft.IdentityModel.Tokens;
 using src.Azure.Serverless.Api.Filters;
 using src.Azure.Serverless.Api.Commons;
+using Microsoft.OpenApi.Models;
+using Azure.Serverless.Api.Managers;
 
 namespace Azure.Serverless.Api
 {
@@ -49,7 +46,6 @@ namespace Azure.Serverless.Api
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(MyExceptionFilter));
-                options.Filters.Add(typeof(TokenFilter));
                 options.ModelValidatorProviders.Clear();
             })
             .AddDataAnnotationsLocalization()
@@ -61,7 +57,6 @@ namespace Azure.Serverless.Api
                 options.JsonSerializerOptions.Converters.Add(new MyDateTimeConverter());
             });
             #endregion
-
 
             #region CORS
             services.AddCors(options =>
@@ -76,34 +71,18 @@ namespace Azure.Serverless.Api
             });
             #endregion
 
-            #region JWT
-            var secret = Encoding.ASCII.GetBytes(Configuration.GetSection("TokenManagementOptions:Secret").Value);
+            #region Application Dependency Injection
 
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(secret),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
-            services.AddAuthorization();
+            services.AddScoped<ITerritoryManager, TerritoryManager>();
+
             #endregion
 
-
+            // Swagger configuration
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            });
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -122,6 +101,12 @@ namespace Azure.Serverless.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("swagger/v1/swagger.json", "My API V1");
             });
         }
     }

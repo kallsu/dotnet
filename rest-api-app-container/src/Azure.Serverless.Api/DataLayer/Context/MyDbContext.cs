@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -40,9 +39,8 @@ namespace Azure.Serverless.Api.Datalayer.Context
             {
                 return await base.SaveChangesAsync(cancellationToken);
             }
-            catch (Exception sqlException)
+            catch (System.Exception sqlException)
             {
-
                 _logger.LogError(sqlException.HResult, sqlException, $"Sql exception: {sqlException.Message}");
                 throw sqlException;
             }
