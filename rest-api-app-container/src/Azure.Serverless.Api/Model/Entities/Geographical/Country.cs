@@ -14,7 +14,6 @@ namespace Azure.Web.Api.Models.Entities
         [Column("Name", TypeName = "varchar(150)")]
         public string Name { get; set; }
 
-        [ForeignKey("CountryId")]
-        public List<District> districs { get; set; }
+        public List<District> Districs { get; set; }
     }
 }

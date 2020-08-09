@@ -20,7 +20,6 @@ namespace Azure.Web.Api.Models.Entities
         [Column("Name", TypeName = "varchar(200)")]
         public string Name { get; set; }
 
-        [ForeignKey("DistrictId")]
         public List<DetectionPoint> Points { get; set; }
     }
 }
