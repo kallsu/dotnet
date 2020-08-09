@@ -4,6 +4,7 @@ using Azure.Web.Api.Business.Services;
 using Azure.Web.Api.Commons;
 using Azure.Web.Api.Dtos;
 using Azure.Web.Api.Exception;
+using Azure.Web.Api.Model.Dtos;
 using Azure.Web.Api.Models.Entities;
 
 namespace Azure.Web.Api.Business.Managers
@@ -21,7 +22,7 @@ namespace Azure.Web.Api.Business.Managers
 
         public async Task<Country> AddCountryAsync(InsertCountryDto input)
         {
-            return await _countryService.CreateAsync<InsertCountryDto>(input);
+            return await _countryService.CreateAsync(input);
         }
 
         public async Task<IEnumerable<Country>> GetCountriesAsync()
@@ -29,9 +30,9 @@ namespace Azure.Web.Api.Business.Managers
             return await _countryService.GetAllAsync();
         }
         
-        public Task<District> AddDistrict(InsertDistrictDto input)
+        public async Task<District> AddDistrict(InsertDistrictDto input)
         {
-            throw new System.NotImplementedException();
+            return await _districtService.CreateAsync(input);
         }
 
         public async Task<IEnumerable<District>> GetDistrictsAsync(string countryId)
@@ -42,7 +43,21 @@ namespace Azure.Web.Api.Business.Managers
                 };
             }
 
-            return await _districtService.GetAllAsync(id);
+            var country = await _countryService.GetByIdAsync(id);
+
+            if (country == null)
+            {
+                throw new MyAppException
+                {
+                    ErrorCode = MyCustomErrorCodes.COUNTRY_NOT_FOUND
+                };
+            }
+
+            return _districtService.GetAllAsync<string>(
+                (p => p.CountryId == id),
+                (p => p.Name),
+                true
+            );
         }
 
         public Task<DetectionPoint> AddDetectionPointAsync()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Azure.Web.Api.Models.Entities;
 using src.Azure.Serverless.Api.DataLayer.Repositories;
@@ -20,21 +21,21 @@ namespace Azure.Web.Api.Business.Services
             return await _repository.GetAll();
         }
 
+        public IEnumerable<TEntity> GetAllAsync<T>(Expression<Func<TEntity, bool>> where,
+                                                    Func<TEntity, T> orderBy,
+                                                    bool orderAscending = true)
+        {
+            return _repository.GetAllByExpression<T>(where, orderBy, orderAscending);
+        }
+
         public async Task<TEntity> GetByIdAsync(long id)
         {
             return await _repository.GetById(id);
         }
 
-        public async Task<TEntity> CreateAsync<TModel>(TModel dto) where TModel : class
+        public async Task<TEntity> GetByExpression(Expression<Func<TEntity, bool>> where)
         {
-            // use mapper to convert from model to entity
-
-            return await _repository.InsertAsync(newEntity);
-        }
-
-        public async Task UpdateAsync<TModel>(TModel dto)
-        {
-            await _repository.UpdateAsync(entity);
+            return await _repository.GetByExpression(where);
         }
     }
 }
