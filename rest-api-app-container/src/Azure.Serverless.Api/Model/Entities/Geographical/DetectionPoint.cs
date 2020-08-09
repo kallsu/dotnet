@@ -20,7 +20,6 @@ namespace Azure.Web.Api.Models.Entities
         [Column(TypeName="geometry (point)")]
         public Point GeoLocation { get; set; }
 
-        [ForeignKey("DetectionPointId")]
         public List<Temperature> Temperatures {get;set;}
     }
 }
