@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 namespace Azure.Web.Api.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -58,7 +58,7 @@ namespace Azure.Web.Api.Migrations
                     Updated = table.Column<DateTime>(nullable: false),
                     DistrictId = table.Column<long>(nullable: false),
                     Code = table.Column<string>(nullable: false),
-                    GeoLocation = table.Column<Point>(type: "geometry (point)", nullable: true)
+                    GeoLocation = table.Column<NpgsqlPoint>(type: "point", nullable: false)
                 },
                 constraints: table =>
                 {

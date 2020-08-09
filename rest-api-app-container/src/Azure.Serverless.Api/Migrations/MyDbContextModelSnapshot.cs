@@ -4,8 +4,8 @@ using Azure.Web.Api.Datalayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 namespace Azure.Web.Api.Migrations
 {
@@ -67,8 +67,8 @@ namespace Azure.Web.Api.Migrations
                     b.Property<long>("DistrictId")
                         .HasColumnType("bigint");
 
-                    b.Property<Point>("GeoLocation")
-                        .HasColumnType("geometry (point)");
+                    b.Property<NpgsqlPoint>("GeoLocation")
+                        .HasColumnType("point");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("timestamp without time zone");

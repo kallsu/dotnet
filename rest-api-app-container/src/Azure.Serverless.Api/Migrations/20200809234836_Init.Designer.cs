@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 namespace Azure.Web.Api.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20200809233124_Initial")]
-    partial class Initial
+    [Migration("20200809234836_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -69,8 +69,8 @@ namespace Azure.Web.Api.Migrations
                     b.Property<long>("DistrictId")
                         .HasColumnType("bigint");
 
-                    b.Property<Point>("GeoLocation")
-                        .HasColumnType("geometry (point)");
+                    b.Property<NpgsqlPoint>("GeoLocation")
+                        .HasColumnType("point");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("timestamp without time zone");
