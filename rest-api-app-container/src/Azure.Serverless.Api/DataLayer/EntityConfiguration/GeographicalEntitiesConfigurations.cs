@@ -1,7 +1,7 @@
+using Azure.Web.Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using Azure.Serverless.Api.Entities;
 
-namespace Azure.Serverless.Api.Datalayer.EntityConfiguration
+namespace Azure.Web.Api.Datalayer.EntityConfiguration
 {
     public class CountryConfiguration : BaseEntityConfiguration<Country>
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Azure.Serverless.Api.Entities;
-using Azure.Serverless.Api.Managers;
+using Azure.Web.Api.Models.Entities;
+using Azure.Web.Api.Managers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -18,9 +18,9 @@ namespace src.Azure.Serverless.Api.Controllers
 
         [HttpGet("/country")]
         [ProducesResponseType(typeof(IEnumerable<Country>), 200)]
-        public Task<IActionResult> GetCountries()
+        public async Task<IActionResult> GetCountries()
         {
-            var results = _manager.GetCountries();
+            var results = await _manager.GetCountriesAsync();
 
             return Ok(results);
         }

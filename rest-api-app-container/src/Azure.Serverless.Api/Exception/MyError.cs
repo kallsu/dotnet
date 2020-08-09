@@ -1,4 +1,4 @@
-namespace Azure.Serverless.Api.Exception
+namespace Azure.Web.Api.Exception
 {
     public class MyError  
     {

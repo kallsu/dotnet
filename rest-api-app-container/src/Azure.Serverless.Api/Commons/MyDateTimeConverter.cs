@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace src.Azure.Serverless.Api.Commons
+namespace Azure.Web.Api.Commons
 {
     public class MyDateTimeConverter : JsonConverter<DateTime>
     {

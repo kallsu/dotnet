@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Azure.Serverless.Api.Entities
+namespace Azure.Web.Api.Models.Entities
 {
     [Table("districts")]
     public class District : BaseEntity

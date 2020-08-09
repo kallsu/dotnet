@@ -1,4 +1,4 @@
-namespace src.Azure.Serverless.Api.Exception
+namespace Azure.Web.Api.Exception
 {
     public class MyAppException : System.Exception
     {

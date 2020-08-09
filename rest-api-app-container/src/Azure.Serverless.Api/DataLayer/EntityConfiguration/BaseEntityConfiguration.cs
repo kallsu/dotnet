@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Azure.Serverless.Api.Entities;
+using Azure.Web.Api.Models.Entities;
 
-namespace Azure.Serverless.Api.Datalayer.EntityConfiguration
+namespace Azure.Web.Api.Datalayer.EntityConfiguration
 {
     public class BaseEntityConfiguration<T> where T : BaseEntity 
     {

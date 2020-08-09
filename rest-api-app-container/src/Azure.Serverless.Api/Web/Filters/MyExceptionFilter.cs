@@ -1,11 +1,10 @@
-using Azure.Serverless.Api.Exception;
+using Azure.Web.Api.Exception;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using src.Azure.Serverless.Api.Exception;
 
-namespace src.Azure.Serverless.Api.Filters
+namespace Azure.Web.Api.Filters
 {
     public class MyExceptionFilter : IExceptionFilter
     {
@@ -31,7 +30,7 @@ namespace src.Azure.Serverless.Api.Filters
             };
 
             // custom error management
-            if (errorCode > 1 && errorCode <= 100)
+            if (errorCode >= 400 && errorCode <= 499)
             {
                 // all this codes return a 400 as HTTP response
 

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using NetTopologySuite.Geometries;
 
-namespace Azure.Serverless.Api.Entities
+namespace Azure.Web.Api.Models.Entities
 {
     [Table("detection_points")]
     public class DetectionPoint : BaseEntity

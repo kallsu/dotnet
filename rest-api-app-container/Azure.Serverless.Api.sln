@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8DAFA9E4-2ACD-4DF8-B234-295286D8432F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Serverless.Api", "src\Azure.Serverless.Api\Azure.Serverless.Api.csproj", "{53426198-0C11-4A77-822F-50E7BBE8410B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.Web.Api", "src\Azure.Serverless.Api\Azure.Web.Api.csproj", "{53426198-0C11-4A77-822F-50E7BBE8410B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

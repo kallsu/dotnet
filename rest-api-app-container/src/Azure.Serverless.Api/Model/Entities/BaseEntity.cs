@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Azure.Serverless.Api.Entities
+namespace Azure.Web.Api.Models.Entities
 {
     public abstract class BaseEntity
     {

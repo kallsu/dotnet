@@ -1,12 +1,12 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Web.Api.Datalayer.EntityConfiguration;
+using Azure.Web.Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
-using Azure.Serverless.Api.Entities;
-using Azure.Serverless.Api.Datalayer.EntityConfiguration;
 
-namespace Azure.Serverless.Api.Datalayer.Context
+namespace Azure.Web.Api.Datalayer.Context
 {
     public class MyDbContext : DbContext
     {

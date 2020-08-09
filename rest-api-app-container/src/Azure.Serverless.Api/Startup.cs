@@ -7,13 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Converters;
 using Microsoft.EntityFrameworkCore;
-using Azure.Serverless.Api.Datalayer.Context;
 using src.Azure.Serverless.Api.Filters;
 using src.Azure.Serverless.Api.Commons;
 using Microsoft.OpenApi.Models;
-using Azure.Serverless.Api.Managers;
+using Azure.Web.Api.Datalayer.Context;
+using Azure.Web.Api.Managers;
 
-namespace Azure.Serverless.Api
+namespace Azure.Web.Api
 {
     public class Startup
     {

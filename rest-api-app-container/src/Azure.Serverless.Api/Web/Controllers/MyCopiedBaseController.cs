@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Azure.Serverless.Api.Exception;
+using Azure.Web.Api.Exception;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
