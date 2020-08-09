@@ -17,6 +17,7 @@ namespace Azure.Web.Api.Models.Entities
         [Required]
         public string Code { get; set; }
 
+        [Column(TypeName="geometry (point)")]
         public Point GeoLocation { get; set; }
 
         [ForeignKey("DetectionPointId")]

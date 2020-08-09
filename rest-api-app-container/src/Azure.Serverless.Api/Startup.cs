@@ -7,11 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Converters;
 using Microsoft.EntityFrameworkCore;
-using src.Azure.Serverless.Api.Filters;
-using src.Azure.Serverless.Api.Commons;
 using Microsoft.OpenApi.Models;
 using Azure.Web.Api.Datalayer.Context;
-using Azure.Web.Api.Managers;
+using Azure.Web.Api.Filters;
+using Azure.Web.Api.Business.Managers;
+using Azure.Web.Api.Business.Services;
+using src.Azure.Serverless.Api.DataLayer.Repositories;
+using Azure.Web.Api.Commons;
 
 namespace Azure.Web.Api
 {
@@ -74,6 +76,14 @@ namespace Azure.Web.Api
             #region Application Dependency Injection
 
             services.AddScoped<ITerritoryManager, TerritoryManager>();
+
+            services.AddScoped<CountryService, CountryService>();
+            services.AddScoped<DistrictService, DistrictService>();
+            services.AddScoped<DetectionPointService, DetectionPointService>();
+
+            services.AddScoped<CountryRepository, CountryRepository>();
+            services.AddScoped<DistrictRepository, DistrictRepository>();
+            services.AddScoped<DetectionPointRepository, DetectionPointRepository>();
 
             #endregion
 

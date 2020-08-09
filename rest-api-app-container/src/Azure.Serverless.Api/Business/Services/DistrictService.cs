@@ -9,25 +9,12 @@ namespace Azure.Web.Api.Business.Services
 {
     public class DistrictService : BaseService<District>
     {
-        private readonly BaseRepository<Country> _countryRepository;
-
-        public DistrictService(DistrictRepository repository, CountryRepository countryRepository) : base(repository)
+        public DistrictService(DistrictRepository repository) : base(repository)
         {
-            _countryRepository = countryRepository;
         }
 
-        public async Task<District> CreateAsync(InsertDistrictDto input)
+        public async Task<District> CreateAsync(InsertDistrictDto input, Country country)
         {
-            var country = await _countryRepository.GetByExpression(p => p.Code.Equals(input.CountryCode));
-
-            if (country == null)
-            {
-                throw new MyAppException
-                {
-                    ErrorCode = MyCustomErrorCodes.COUNTRY_NOT_FOUND
-                };
-            }
-
             var newDistrict = new District {
                 Code = input.DistrictCode,
                 Name = input.DistrictName,

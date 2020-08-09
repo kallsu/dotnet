@@ -8,7 +8,7 @@ namespace Azure.Web.Api.Business.Services
 {
     public class CountryService : BaseService<Country>
     {
-        public CountryService(BaseRepository<Country> repository) : base(repository)
+        public CountryService(CountryRepository repository) : base(repository)
         {
         }
 

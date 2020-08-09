@@ -1,5 +1,3 @@
-using System;
-
 namespace Azure.Web.Api.Model.Dtos
 {
     public class InsertDistrictDto
