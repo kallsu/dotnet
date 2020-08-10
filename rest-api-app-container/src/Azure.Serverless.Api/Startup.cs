@@ -12,8 +12,9 @@ using Azure.Web.Api.Datalayer.Context;
 using Azure.Web.Api.Filters;
 using Azure.Web.Api.Business.Managers;
 using Azure.Web.Api.Business.Services;
-using src.Azure.Serverless.Api.DataLayer.Repositories;
 using Azure.Web.Api.Commons;
+using Azure.Web.Api.DataLayer.MockData;
+using Azure.Web.Api.DataLayer.Repositories;
 
 namespace Azure.Web.Api
 {
@@ -75,14 +76,17 @@ namespace Azure.Web.Api
             #region Application Dependency Injection
 
             services.AddScoped<ITerritoryManager, TerritoryManager>();
+            services.AddScoped<ITemperatureManager, TemperatureManager>();
 
             services.AddScoped<CountryService, CountryService>();
             services.AddScoped<DistrictService, DistrictService>();
             services.AddScoped<DetectionPointService, DetectionPointService>();
+            services.AddScoped<TemperatureService, TemperatureService>();
 
             services.AddScoped<CountryRepository, CountryRepository>();
             services.AddScoped<DistrictRepository, DistrictRepository>();
             services.AddScoped<DetectionPointRepository, DetectionPointRepository>();
+            services.AddScoped<TemperatureRepository, TemperatureRepository>();
 
             #endregion
 
@@ -101,8 +105,8 @@ namespace Azure.Web.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            // apply migrations
-            dbContext.Database.Migrate();
+            // initialize database
+            MockDataIntializer.InitDatabase(dbContext).GetAwaiter().GetResult();
 
             app.UseHttpsRedirection();
 

@@ -1,10 +1,8 @@
 using System.Threading.Tasks;
+using Azure.Web.Api.DataLayer.Repositories;
 using Azure.Web.Api.Dtos;
 using Azure.Web.Api.Models.Entities;
-using NetTopologySuite;
-using NetTopologySuite.Geometries;
 using NpgsqlTypes;
-using src.Azure.Serverless.Api.DataLayer.Repositories;
 
 namespace Azure.Web.Api.Business.Services
 {

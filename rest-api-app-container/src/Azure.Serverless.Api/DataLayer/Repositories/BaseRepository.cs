@@ -7,7 +7,7 @@ using Azure.Web.Api.Datalayer.Context;
 using Azure.Web.Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace src.Azure.Serverless.Api.DataLayer.Repositories
+namespace Azure.Web.Api.DataLayer.Repositories
 {
     public abstract class BaseRepository<TEntity> where TEntity : BaseEntity
     {
