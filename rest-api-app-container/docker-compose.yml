@@ -1,0 +1,20 @@
+#
+# This docker compose is useful only for the local development and debugging.
+# No of this assertion is related to the deployment in development / staging / production environment
+#
+version: '3'
+services:
+  appl:
+    build:
+      context: .
+      args:
+        Environment: Local
+    ports:
+      - "443:443"
+
+  database:
+    image: "postgres:12"
+    ports:
+      -"5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=MyPassword
