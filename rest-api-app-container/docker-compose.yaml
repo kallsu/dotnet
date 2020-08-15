@@ -4,18 +4,25 @@
 #
 version: '3'
 services:
-  appl:
-    build:
-      context: .
-      args:
-        Environment: Local
-    ports:
-      - "80:80"
-
   database:
     image: "mcr.microsoft.com/mssql/server:2019-latest"
     ports:
-      -"1433:1433"
+      - "1433:1433"
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=MyPassword123
+
+  web-api:
+    build:
+      context: .
+      args:
+        Environment: Docker
+    ports:
+      - "80:80"
+    links:
+      - "database"
+    depends_on: 
+      - "database"
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Docker
+    command: sh -c "sleep 20s && dotnet Azure.Web.Api.dll"
