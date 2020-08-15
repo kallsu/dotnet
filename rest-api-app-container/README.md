@@ -8,9 +8,9 @@ It is designed as simple monolithic application due to simplify the understandin
 
 Using docker to start a new instance of PostgreSQL 12, or install a database server on local PC.
 
-Run the database server: `docker run -p 5432:5432 -e POSTGRES_PASSWORD=MyPassword postgres:12`
+Run the database server: `docker run -p 1433:1433 -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=MyPassword123' mcr.microsoft.com/mssql/server:2019-latest`
 
-**Note**: In this example the database hasn't the persistent volume, so all the times it start fresh. If you want add the persistent storage attached with a local folder, please follow the instruction on [PostgreSQL Docker Hub page](https://hub.docker.com/_/postgres).
+**Note**: In this example the database hasn't the persistent volume, so all the times it start fresh. If you want add the persistent storage attached with a local folder, please follow the instruction on [Microsoft SQL Server Docker Hub page](https://hub.docker.com/_/microsoft-mssql-server).
 
 After the database, please check the `ASPNETCORE_ENVIROMENT` variables and update, if it is required, the connection string.
 
@@ -39,3 +39,50 @@ Point missing:
  * custom script or command line to wait the database before start the application
 
 ## Deployment ##
+
+There is no script, due to the possible customization of every single environment. Instead of propose immediately the solution, according my point of view, it is better explain the single steps to gain own knowledge and awareness about the operations to-do.
+
+Cloud provider choosen:
+ * Azure
+
+Default parameter map:
+
+| Parameter Name | Parameter Default Value |
+|----------------|-------------------------|
+| Location | `southeastasia` |
+
+
+
+### Azure CLI ###
+
+Due to the Cloud Shell and the Azure CLI, the phase of the login and select the right solution is skipped.
+
+1. Create the Resource Group, in this example `MyContainerAppResourceGroup`
+
+    `az group create --location southeastasia --name MyContainerAppResourceGroup`
+
+2. Create Azure Container Registry, where push the application image.
+
+    `az acr create --name MyPersonalACR --resource-group MyContainerAppResourceGroup --sku Basic`
+
+3. Push the docker image created with the description above
+
+
+
+
+4. Create App Service Plan. We start with Linux App Service Plan
+
+    `az appservice plan create --name MyLinuxAppServicePlan `
+        ` --resource-group MyContainerAppResourceGroup`
+        ` --is-linux --sku FREE `
+
+5. Create WebApp for container using the previous `MyLinuxAppServicePlan`. The name of the webapp is `MyTestWebApiContainerApp`
+
+    `az webapp create --resource-group MyContainerAppResourceGroup `
+        `--plan MyLinuxAppServicePlan `
+        `--name MyTestWebApiContainerApp `
+        `--deployment-container-image-name myregistry.azurecr.io/docker-image:tag`
+
+
+
+Create App Service Plan. Window$ here

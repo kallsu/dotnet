@@ -1,9 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure.Web.Api.Datalayer.Context;
 using Azure.Web.Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace Azure.Web.Api.DataLayer.MockData
 {
@@ -60,30 +61,32 @@ namespace Azure.Web.Api.DataLayer.MockData
             await dbContext.Districts.AddRangeAsync(thaiDistrict);
             await dbContext.SaveChangesAsync();
 
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+
             // Points
             var points = new List<DetectionPoint>() {
                 new DetectionPoint {
                     Code = "BKK-01",
                     DistrictId = (await dbContext.Districts.FirstOrDefaultAsync(d => d.Code.Equals("BKK"))).Id,
-                    GeoLocation = new NpgsqlTypes.NpgsqlPoint(100.5561358D, 13.7221077D)
+                    GeoLocation = geometryFactory.CreatePoint(new Coordinate(100.5561358D, 13.7221077D))
                 },
 
                 new DetectionPoint {
                     Code = "SPN-01",
                     DistrictId = (await dbContext.Districts.FirstOrDefaultAsync(d => d.Code.Equals("SPN"))).Id,
-                    GeoLocation = new NpgsqlTypes.NpgsqlPoint(100.6774227D, 13.6446509D)
+                    GeoLocation = geometryFactory.CreatePoint(new Coordinate(100.6774227D, 13.6446509D))
                 },
 
                 new DetectionPoint {
                     Code = "SPN-02",
                     DistrictId = (await dbContext.Districts.FirstOrDefaultAsync(d => d.Code.Equals("SPN"))).Id,
-                    GeoLocation = new NpgsqlTypes.NpgsqlPoint(100.6208533D, 13.5392202D)
+                    GeoLocation = geometryFactory.CreatePoint(new Coordinate(100.6208533D, 13.5392202D))
                 },
 
                 new DetectionPoint {
                     Code = "CHM-01",
                     DistrictId = (await dbContext.Districts.FirstOrDefaultAsync(d => d.Code.Equals("CHM"))).Id,
-                    GeoLocation = new NpgsqlTypes.NpgsqlPoint(98.8864357D, 18.7943954D)
+                    GeoLocation = geometryFactory.CreatePoint(new Coordinate(98.8864357D, 18.7943954D))
                 },
             };
 

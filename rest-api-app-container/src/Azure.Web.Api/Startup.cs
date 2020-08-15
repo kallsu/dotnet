@@ -32,7 +32,7 @@ namespace Azure.Web.Api
         {
             services.AddLogging();
 
-            services.AddDbContext<MyDbContext>(options => options.UseNpgsql(
+            services.AddDbContext<MyDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection"),
                 x => x.UseNetTopologySuite())
             );

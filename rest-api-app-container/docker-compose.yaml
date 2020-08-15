@@ -13,8 +13,9 @@ services:
       - "80:80"
 
   database:
-    image: "postgres:12"
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
     ports:
-      -"5432:5432"
+      -"1433:1433"
     environment:
-      - POSTGRES_PASSWORD=MyPassword
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MyPassword123
