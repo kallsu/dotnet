@@ -14,7 +14,7 @@ Run the database server: `docker run -p 5432:5432 -e POSTGRES_PASSWORD=MyPasswor
 
 After the database, please check the `ASPNETCORE_ENVIROMENT` variables and update, if it is required, the connection string.
 
-## Create the container ##
+### Create the container ###
 
 The docker build need 1 parameter:
 
@@ -24,8 +24,18 @@ So the final instruction to build the container will be:
 
  `docker build -f Dockerfile -t <YOUR_TAG> --build-arg Environment=<YOUR_ENV> .`
 
-## To run the container ##
+### To run the container ###
 
 The container can run locally with the following command :
 
- `docker run -p 443:443 <YOUR_TAG> or <IMAGE_ID>`
+ `docker run -p 80:80 <YOUR_TAG> or <IMAGE_ID>`
+
+### docker-compose ###
+
+`docker-compose.yaml` file contains the base configuration to start the application and the database.
+
+Point missing:
+ * application should wait that the database is up and running
+ * custom script or command line to wait the database before start the application
+
+## Deployment ##

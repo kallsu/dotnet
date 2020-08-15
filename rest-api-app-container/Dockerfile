@@ -26,8 +26,8 @@ RUN cp -rv /home/web-api-build/* . && \
 
 # Setup
 ENV ASPNETCORE_ENVIRONMENT = $Environment
-ENV ENV ASPNETCORE_URLS="https://+:443"
+ENV ENV ASPNETCORE_URLS="https://+:80"
 
-EXPOSE 443
+EXPOSE 80
 
 CMD ["dotnet", "Azure.Web.Api.dll"]

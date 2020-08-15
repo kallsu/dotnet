@@ -10,7 +10,7 @@ services:
       args:
         Environment: Local
     ports:
-      - "443:443"
+      - "80:80"
 
   database:
     image: "postgres:12"
