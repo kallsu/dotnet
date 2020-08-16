@@ -1,4 +1,4 @@
-# Azure Serverless API #
+# Example of ASP.NET Core Web Api#
 
 ASP.NET Core WebApi sample application.
 
@@ -90,6 +90,6 @@ git push
 
 ## Contribution ##
 
-Please use the Issue tracker of this repository.
+Please use the Issue tracker of this repository specifing the project where you refer.
 
 Thanks
