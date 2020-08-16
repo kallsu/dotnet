@@ -55,34 +55,97 @@ Due to the Cloud Shell and the Azure CLI, the phase of the login and select the 
 
 1. Create the Resource Group, in this example `MyContainerAppResourceGroup`
 
-    `az group create --location southeastasia --name MyContainerAppResourceGroup`
+    ```
+    az group create --location southeastasia --name MyContainerAppResourceGroup
+    ```
 
-2. Create Azure Container Registry, where push the application image.
+2. Create the Azure SQL Server
 
-    `az acr create --name MyPersonalACR --resource-group MyContainerAppResourceGroup --sku Basic`
+    ```
+    az sql server create --name my-container-app-sql-server 
+        --resource-group MyContainerAppResourceGroup 
+        --admin-password MyPassword123 
+        --admin-user sa01 
+        --minimal-tls-version 1.2
+    ```
 
-3. Push the docker image created with the description above
+    Enable the access to other Azure Services
 
-    `docker tag <YOUR_IMAGE_TAG> ...`
+    ```
+    az sql server firewall-rule create --resource-group MyContainerAppResourceGroup  
+        --server my-container-app-sql-server 
+        --name AllowOtherAzureService 
+        --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+    ```
 
-4. Create the Azure SQL Server
+3. Create the Azure SQL Database
 
-5. Create the Azure SQL Database
+    ```
+    az sql db create --name my-container-app-sql-db
+        --resource-group MyContainerAppResourceGroup
+        --server my-container-app-sql-server
+        --service-objective Basic
+        --zone-redundant false
+    ```
 
+4. Create Azure Container Registry, where push the application image.
+
+    ```
+    az acr create --name MyPersonalAcr --resource-group MyContainerAppResourceGroup --sku Basic --admin-enabled true
+    ```
+
+5. For this example, use the admin credentials to push the image. For distributed and secure solutions, it is required a centralized user and permission management. 
+
+   Configure the `appsettings.Development.json` file, build and push the docker image.
+
+    ```
+    docker build -t my-web-app-container -f Dockerfile --build-arg Environment=Development .
+
+    docker login mypersonalacr.azurecr.io
+
+    docker tag my-web-app-container mypersonalacr.azurecr.io/my-web-app-container
+
+    docker push mypersonalacr.azurecr.io/my-web-app-container
+    ```
 
 6. Create App Service Plan. We start with Linux App Service Plan
 
-    `az appservice plan create --name MyLinuxAppServicePlan `
-        ` --resource-group MyContainerAppResourceGroup`
-        ` --is-linux --sku FREE `
+    ```
+    az appservice plan create --name MyLinuxAppServicePlan 
+        --resource-group MyContainerAppResourceGroup 
+        --is-linux 
+        --sku FREE 
+    ```
 
 7. Create WebApp for container using the previous `MyLinuxAppServicePlan`. The name of the webapp is `MyTestWebApiContainerApp`
 
-    `az webapp create --resource-group MyContainerAppResourceGroup `
-        `--plan MyLinuxAppServicePlan `
-        `--name MyTestWebApiContainerApp `
-        `--deployment-container-image-name myregistry.azurecr.io/docker-image:tag`
+    ```
+    az webapp create --resource-group MyContainerAppResourceGroup 
+        --plan MyLinuxAppServicePlan 
+        --name MyTestWebApiContainerApp 
+        --deployment-container-image-name mypersonalacr.azurecr.io/my-web-app-container:latest
+    ```
 
+8. Setup the right connection string (again)
 
+    ```
+    az webapp config connection-string set --resource-group MyContainerAppResourceGroup  \
+        --connection-string-type SQLAzure \
+        --name MyTestWebApiContainerApp \ 
+        --settings DefaultConnection='Server=tcp:my-container-app-sql-server.database.windows.net,1433;Initial Catalog=my-container-app-sql-db;Persist Security Info=False;User ID=sa01;Password=MyPassword123;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+    ```
+9. The result should be showed [here](https://mytestwebapicontainerapp.azurewebsites.net/swagger/index.html)
 
-Create App Service Plan. Window$ here
+**It is not finishe yet !**
+
+10. Create the application insight associated to the application, that keeps the log for 30 days.
+
+    ```
+    az monitor app-insights component create --app MyTestWebApiContainerApp 
+        --location southeastasia 
+        --resource-group MyContainerAppResourceGroup 
+        --kind web 
+        --application-type web 
+        --retention-time 30
+    ```
+
