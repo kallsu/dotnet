@@ -1,4 +1,4 @@
-# Example of ASP.NET Core Web Api#
+# Example of ASP.NET Core Web Api #
 
 ASP.NET Core WebApi sample application.
 
