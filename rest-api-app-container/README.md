@@ -6,7 +6,7 @@ It is designed as simple monolithic application due to simplify the understandin
 
 ## During the development ## 
 
-Using docker to start a new instance of PostgreSQL 12, or install a database server on local PC.
+Using docker to start a new instance of Microsoft Sql Server 2019, or install a database server on local PC.
 
 Run the database server: `docker run -p 1433:1433 -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=MyPassword123' mcr.microsoft.com/mssql/server:2019-latest`
 
@@ -14,138 +14,57 @@ Run the database server: `docker run -p 1433:1433 -e 'ACCEPT_EULA=Y' -e 'SA_PASS
 
 After the database, please check the `ASPNETCORE_ENVIROMENT` variables and update, if it is required, the connection string.
 
-### Create the container ###
+## Infrastructure ##
 
-The docker build need 1 parameter:
+Azure ARM template.
 
- * `Environment`, that is the value of `ASPNETCORE_ENVIROMENT` variable above
+## Deploy ##
 
-So the final instruction to build the container will be:
+Parameters used for this example and reused below.
 
- `docker build -f Dockerfile -t <YOUR_TAG> --build-arg Environment=<YOUR_ENV> .`
-
-### To run the container ###
-
-The container can run locally with the following command :
-
- `docker run -p 80:80 <YOUR_TAG> or <IMAGE_ID>`
-
-### docker-compose ###
-
-`docker-compose.yaml` file contains the base configuration to start the application and the database.
-
-## Deployment ##
-
-There is no script, due to the possible customization of every single environment. Instead of propose immediately the solution, according my point of view, it is better explain the single steps to gain own knowledge and awareness about the operations to-do.
-
-Cloud provider choosen:
- * Azure
-
-Default parameter map:
-
-| Parameter Name | Parameter Default Value |
-|----------------|-------------------------|
-| Location | `southeastasia` |
+| Parameter Name | Parameter Value |
+|----------------|-----------------|
+| Resource group Name | MyAppResourceGroup |
+| Azure SQL Server Name | my-web-app-sql-server |
+| Azure SQL Database Name | my-web-app-sql-db |
+| App Service Plan Name | MyWebAppServicePlan |
+| WebApp Name | MyTestWebApiApp |
 
 
+## Application configuration ##
 
-### Azure CLI ###
+Need to configure the web application
 
-Due to the Cloud Shell and the Azure CLI, the phase of the login and select the right solution is skipped.
+```
+az webapp config connection-string set --resource-group MyAppResourceGroup --connection-string-type SQLAzure --name MyTestWebApiApp --settings DefaultConnection='Server=tcp:my-web-app-sql-server.database.windows.net,1433;Initial Catalog=my-app-sql-db;Persist Security Info=False;User ID=sa01;Password=MyPassword123;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 
-1. Create the Resource Group, in this example `MyContainerAppResourceGroup`
+az monitor app-insights component create --app MyTestWebApiApp --location southeastasia --resource-group MyAppResourceGroup --kind web --application-type web --retention-time 30
 
-    ```
-    az group create --location southeastasia --name MyContainerAppResourceGroup
-    ```
+az webapp config set --name MyTestWebApiApp --resource-group MyAppResourceGroup --generic-configurations '{"APPINSIGHTS_INSTRUMENTATIONKEY": "COPY_HERE_THE_APPINSIGHT_KEY"}'
 
-2. Create the Azure SQL Server
+az webapp update --https-only true --name MyTestWebApiApp --resource-group MyAppResourceGroup
 
-    ```
-    az sql server create --name my-container-app-sql-server 
-        --resource-group MyContainerAppResourceGroup 
-        --admin-password MyPassword123 
-        --admin-user sa01 
-        --minimal-tls-version 1.2
-    ```
+az webapp config set --name MyTestWebApiApp --resource-group MyAppResourceGroup --ftps-state FtpsOnly
 
-    Enable the access to other Azure Services
+az webapp deployment user set --user-name MyTestWebApiAppDeployUserName --password MyPassword123
 
-    ```
-    az sql server firewall-rule create --resource-group MyContainerAppResourceGroup  
-        --server my-container-app-sql-server 
-        --name AllowOtherAzureService 
-        --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
-    ```
+az webapp deployment source config-local-git --resource-group MyAppResourceGroup --name MyTestWebApiApp
+```
 
-3. Create the Azure SQL Database
+## Deploy ##
 
-    ```
-    az sql db create --name my-container-app-sql-db
-        --resource-group MyContainerAppResourceGroup
-        --server my-container-app-sql-server
-        --service-objective Basic
-        --zone-redundant false
-    ```
+Publish the project into a separated folder of local disk
 
-4. Create Azure Container Registry, where push the application image.
+`dotnet publish src/Azure.Web.Api -c Release -f netcoreapp3.1 -o <LOCAL_FOLDER_PATH>`
 
-    ```
-    az acr create --name MyPersonalAcr --resource-group MyContainerAppResourceGroup --sku Basic --admin-enabled true
-    ```
+Configure the Web Application to deploy by Kudu.
 
-5. For this example, use the admin credentials to push the image. For distributed and secure solutions, it is required a centralized user and permission management. 
+```
+git remote add azure https://MyDeployUserName@MyTestWebApiApp.scm.azurewebsites.net/MyTestWebApiApp.git
 
-   Configure the `appsettings.Development.json` file, build and push the docker image.
+git add .
 
-    ```
-    docker build -t my-web-app-container -f Dockerfile --build-arg Environment=Development .
+git commit -m "Deploy"
 
-    docker login mypersonalacr.azurecr.io
-
-    docker tag my-web-app-container mypersonalacr.azurecr.io/my-web-app-container
-
-    docker push mypersonalacr.azurecr.io/my-web-app-container
-    ```
-
-6. Create App Service Plan. We start with Linux App Service Plan
-
-    ```
-    az appservice plan create --name MyLinuxAppServicePlan 
-        --resource-group MyContainerAppResourceGroup 
-        --is-linux 
-        --sku FREE 
-    ```
-
-7. Create WebApp for container using the previous `MyLinuxAppServicePlan`. The name of the webapp is `MyTestWebApiContainerApp`
-
-    ```
-    az webapp create --resource-group MyContainerAppResourceGroup 
-        --plan MyLinuxAppServicePlan 
-        --name MyTestWebApiContainerApp 
-        --deployment-container-image-name mypersonalacr.azurecr.io/my-web-app-container:latest
-    ```
-
-8. Setup the right connection string (again)
-
-    ```
-    az webapp config connection-string set --resource-group MyContainerAppResourceGroup  \
-        --connection-string-type SQLAzure \
-        --name MyTestWebApiContainerApp \ 
-        --settings DefaultConnection='Server=tcp:my-container-app-sql-server.database.windows.net,1433;Initial Catalog=my-container-app-sql-db;Persist Security Info=False;User ID=sa01;Password=MyPassword123;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
-    ```
-9. The result should be showed [here](https://mytestwebapicontainerapp.azurewebsites.net/swagger/index.html)
-
-**It is not finishe yet !**
-
-10. Create the application insight associated to the application, that keeps the log for 30 days.
-
-    ```
-    az monitor app-insights component create --app MyTestWebApiContainerApp 
-        --location southeastasia 
-        --resource-group MyContainerAppResourceGroup 
-        --kind web 
-        --application-type web 
-        --retention-time 30
-    ```
-
+git push
+```
