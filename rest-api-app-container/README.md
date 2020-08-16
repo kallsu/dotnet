@@ -34,10 +34,6 @@ The container can run locally with the following command :
 
 `docker-compose.yaml` file contains the base configuration to start the application and the database.
 
-Point missing:
- * application should wait that the database is up and running
- * custom script or command line to wait the database before start the application
-
 ## Deployment ##
 
 There is no script, due to the possible customization of every single environment. Instead of propose immediately the solution, according my point of view, it is better explain the single steps to gain own knowledge and awareness about the operations to-do.
@@ -67,16 +63,20 @@ Due to the Cloud Shell and the Azure CLI, the phase of the login and select the 
 
 3. Push the docker image created with the description above
 
+    `docker tag <YOUR_IMAGE_TAG> ...`
+
+4. Create the Azure SQL Server
+
+5. Create the Azure SQL Database
 
 
-
-4. Create App Service Plan. We start with Linux App Service Plan
+6. Create App Service Plan. We start with Linux App Service Plan
 
     `az appservice plan create --name MyLinuxAppServicePlan `
         ` --resource-group MyContainerAppResourceGroup`
         ` --is-linux --sku FREE `
 
-5. Create WebApp for container using the previous `MyLinuxAppServicePlan`. The name of the webapp is `MyTestWebApiContainerApp`
+7. Create WebApp for container using the previous `MyLinuxAppServicePlan`. The name of the webapp is `MyTestWebApiContainerApp`
 
     `az webapp create --resource-group MyContainerAppResourceGroup `
         `--plan MyLinuxAppServicePlan `
