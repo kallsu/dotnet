@@ -31,6 +31,11 @@ Parameters used for this example and reused below.
 | WebApp Name | MyTestWebApiApp |
 
 
+To deploy the template:
+
+`az deployment group create --resource-group MyAppResourceGroup --template-file template.json --parameters @parameters.json`
+
+
 ## Application configuration ##
 
 Need to configure the web application

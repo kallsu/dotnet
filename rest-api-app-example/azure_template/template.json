@@ -28,6 +28,7 @@
             "kind": "v12.0",
             "properties": {
                 "administratorLogin": "sa01",
+                "administratorLoginPassword": "MyPassword123",
                 "version": "12.0",
                 "publicNetworkAccess": "Enabled"
             }

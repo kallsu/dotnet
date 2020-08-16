@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vulnerabilityAssessments_Default_storageContainerPath": {
-            "value": null
+            "value": "cd1767a1001eaee9d3872e927d5ab0e26094c99cb6d2160cf9feb0c65938a047"
         },
         "sites_MyTestWebApiApp_name": {
-            "value": null
+            "value": "MyTestWebApiApp"
         },
         "servers_my_web_app_sql_server_name": {
-            "value": null
+            "value": "my-web-app-sql-server"
         },
         "serverfarms_MyWebAppServicePlan_name": {
-            "value": null
+            "value": "MyWebAppServicePlan"
         }
     }
 }
