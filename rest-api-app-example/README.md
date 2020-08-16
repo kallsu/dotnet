@@ -24,11 +24,11 @@ Parameters used for this example and reused below.
 
 | Parameter Name | Parameter Value |
 |----------------|-----------------|
-| Resource group Name | MyAppResourceGroup |
-| Azure SQL Server Name | my-web-app-sql-server |
-| Azure SQL Database Name | my-web-app-sql-db |
-| App Service Plan Name | MyWebAppServicePlan |
-| WebApp Name | MyTestWebApiApp |
+| Resource group Name | `MyAppResourceGroup` |
+| Azure SQL Server Name | `my-web-app-sql-server` |
+| Azure SQL Database Name | `my-web-app-sql-db` |
+| App Service Plan Name | `MyWebAppServicePlan` |
+| WebApp Name | `MyTestWebApiApp` |
 
 
 To deploy the template:
@@ -38,19 +38,33 @@ To deploy the template:
 
 ## Application configuration ##
 
-Need to configure the web application
+Need to configure the web application:
+
+1. Connection string
 
 ```
 az webapp config connection-string set --resource-group MyAppResourceGroup --connection-string-type SQLAzure --name MyTestWebApiApp --settings DefaultConnection='Server=tcp:my-web-app-sql-server.database.windows.net,1433;Initial Catalog=my-app-sql-db;Persist Security Info=False;User ID=sa01;Password=MyPassword123;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+```
 
+2. Application Insight
+
+```
 az monitor app-insights component create --app MyTestWebApiApp --location southeastasia --resource-group MyAppResourceGroup --kind web --application-type web --retention-time 30
 
 az webapp config set --name MyTestWebApiApp --resource-group MyAppResourceGroup --generic-configurations '{"APPINSIGHTS_INSTRUMENTATIONKEY": "COPY_HERE_THE_APPINSIGHT_KEY"}'
+```
 
+3. WebApp configuration parameters
+
+```
 az webapp update --https-only true --name MyTestWebApiApp --resource-group MyAppResourceGroup
 
 az webapp config set --name MyTestWebApiApp --resource-group MyAppResourceGroup --ftps-state FtpsOnly
+```
 
+4. Deployment set-up
+
+```
 az webapp deployment user set --user-name MyTestWebApiAppDeployUserName --password MyPassword123
 
 az webapp deployment source config-local-git --resource-group MyAppResourceGroup --name MyTestWebApiApp
@@ -73,3 +87,9 @@ git commit -m "Deploy"
 
 git push
 ```
+
+## Contribution ##
+
+Please use the Issue tracker of this repository.
+
+Thanks
