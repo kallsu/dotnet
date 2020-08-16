@@ -2,7 +2,8 @@ using System.Threading.Tasks;
 using Azure.Web.Api.DataLayer.Repositories;
 using Azure.Web.Api.Dtos;
 using Azure.Web.Api.Models.Entities;
-using NpgsqlTypes;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace Azure.Web.Api.Business.Services
 {
@@ -14,8 +15,6 @@ namespace Azure.Web.Api.Business.Services
 
         internal async Task<DetectionPoint> CreateAsync(InsertDetectionPointDto input, District district)
         {
-            
-            
             var newPoint = new DetectionPoint {
                 Code = input.PointCode,
                 District = district,
@@ -23,9 +22,9 @@ namespace Azure.Web.Api.Business.Services
             };
 
             if(input.latitudo.HasValue && input.longitudo.HasValue) {
-                newPoint.GeoLocation = new NpgsqlPoint(
-                        input.longitudo.Value, 
-                        input.latitudo.Value);
+                var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+                newPoint.GeoLocation = geometryFactory.CreatePoint(
+                    new Coordinate(input.longitudo.Value, input.latitudo.Value));
             }
 
             return await _repository.InsertAsync(newPoint);

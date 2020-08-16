@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using NetTopologySuite.Geometries;
-using NpgsqlTypes;
 
 namespace Azure.Web.Api.Models.Entities
 {
@@ -18,8 +17,7 @@ namespace Azure.Web.Api.Models.Entities
         [Required]
         public string Code { get; set; }
 
-        [Column(TypeName="point")]
-        public NpgsqlPoint GeoLocation { get; set; }
+        public Point GeoLocation { get; set; }
 
         public List<Temperature> Temperatures {get;set;}
     }
